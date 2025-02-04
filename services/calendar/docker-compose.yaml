@@ -44,7 +44,7 @@ services:
       - AGENDAV_LANG=en
       - AGENDAV_LOG_DIR=/app/log
     ports:
-      - "{AGENDAV_PORT}:8080"
+      - "${AGENDAV_PORT}:8080"
     volumes:
       - ${AGENDAV_VOLUME}/data:/app/data
       - ${AGENDAV_VOLUME}/log:/app/log
