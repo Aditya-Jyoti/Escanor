@@ -10,22 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repo, ie, get all that is present inside the repo
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Install necessary dependencies (sops, ssh-agent, etc.)
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sops sshpass
-
-      # Step 3: Decrypt the .env.encrypted.yaml file using SOPS
-      - name: Decrypt .env.encrypted.yaml
-        run: |
-          SOPS_AGE_KEY_FILE=${{ secrets.AGE_KEY }} sops --decrypt .env.encrypted.yaml > .env.yaml
-
-      # Step 3: Connect to the VPS using SSH
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.6
         with:
