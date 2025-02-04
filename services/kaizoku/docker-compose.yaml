@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+
+  app:
+    container_name: manga
+    image: ghcr.io/oae/kaizoku:latest
+    environment:
+      - DATABASE_URL=postgresql://${DATABASE_USER:-kaizoku}:${DATABASE_PASSWORD:-kaizoku}@db:${DATABASE_PORT:-5432}/${DATABASE_SCHEMA:-kaizoku}
+      - KAIZOKU_PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PUID=1000
+      - PGID=1000
+      - TZ=etc/timezone
+    volumes:
+      - ${VOLUME}/manga:/data
+      - ${VOLUME}/config:/config
+      - ${VOLUME}/logs:/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - ${PORT}:3000
+    labels:
+        - 'traefik.enable=true'
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - ${VOLUME}/logs/redis:/data
+
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kaizoku"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=${DATABASE_USER:-kaizoku}
+      - POSTGRES_DB=${DATABASE_SCHEMA:-kaizoku}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-kaizoku}
+    volumes:
+      - ${VOLUME}/db:/var/lib/postgresql/data

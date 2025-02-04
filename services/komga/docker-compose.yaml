@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  komga:
+    container_name: read
+    image: gotson/komga
+    volumes:
+      - type: bind
+        source: ${VOLUME}
+        target: /config
+      - type: bind
+        source: ${MANGA_DOWNLOAD_PATH}
+        target: /manga
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    ports:
+      - ${PORT}:25600
+    user: "1000:1000"
+    restart: unless-stopped
+    labels:
+      - 'traefik.enable=true'
