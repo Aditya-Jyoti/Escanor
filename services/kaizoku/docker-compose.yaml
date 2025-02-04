@@ -1,7 +1,4 @@
-version: "3"
-
 services:
-
   app:
     container_name: manga
     image: ghcr.io/oae/kaizoku:latest

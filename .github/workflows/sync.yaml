@@ -43,5 +43,7 @@ jobs:
 
               # Move into the service directory and run docker-compose
               docker compose up -d
+
+              # Move back to services directory
               cd ..
             done

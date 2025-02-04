@@ -1,5 +1,3 @@
-version: "3.3"
-
 services:
   komga:
     container_name: read
@@ -20,4 +18,4 @@ services:
     user: "1000:1000"
     restart: unless-stopped
     labels:
-      - 'traefik.enable=true'
+      - "traefik.enable=true"
