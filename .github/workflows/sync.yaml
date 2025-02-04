@@ -24,11 +24,15 @@ jobs:
             # Pull the latest changes from the main branch
             git pull origin main 
 
+            pwd
+
             # Decrypt the .env.encrypted.yaml file using SOPS
             sops --decrypt .env.encrypted.yaml > .env.yaml
 
             # Move into services directory 
             cd services 
+
+            pwd
 
             # Run docker compose for each service
             for dir in *; do
@@ -45,6 +49,7 @@ jobs:
 
                 # Move into the service directory and run docker-compose
                 cd "$dir"
+                pwd
                 docker-compose up -d
                 cd -
               fi
