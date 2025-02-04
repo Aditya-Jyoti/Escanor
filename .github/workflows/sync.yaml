@@ -1,11 +1,14 @@
 name: sync with vps
+
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.6
@@ -15,29 +18,33 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            # Navigate to project directory and pull changes
+            # Move to the project directory
             cd ${{ secrets.PROJECT_PATH }}
-            git pull origin main
 
-            # Decrypt environment file
+            # Pull the latest changes from the main branch
+            git pull origin main 
+
+            # Decrypt the .env.encrypted.yaml file using SOPS
             sops --decrypt .env.encrypted.yaml > .env.yaml
 
-            # Process each service
-            cd services
+            # Move into services directory 
+            cd services 
 
-            for dir in */; do
-              if [ -f "${dir}docker-compose.yml" ]; then
-                echo "Deploying service in: $dir"
-                
-                # Extract environment variables for this service
-                SERVICE_ENV=$(yq -r ".${dir%/} | to_entries | .[] | \"\(.key)=\(.value)\"" ../.env.yaml)
-                
-                # Export environment variables
+            # Run docker compose for each service
+            for dir in *; do
+              echo "$dir"
+              if [ -d "$dir" ] && [ -f "$dir/docker-compose.yml" ]; then
+                echo "Deploying service in directory: $dir"
+                echo "$dir"
+
+                # Get all decrypted environment variables
+                SERVICE_ENV=$(yq -r ".${dir} | to_entries | .[] | \"\(.key)=\(.value)\"" ../../.env.yaml)
+
+                # Get all decrypted environment variables and export them 
                 eval "$(echo "$SERVICE_ENV" | sed 's/^/export /')"
-                
-                # Run docker-compose
-                cd "$dir"
-                docker-compose up -d
+
+                # Move into the service directory and run docker-compose
+                docker compose up -d
                 cd ..
               fi
             done
