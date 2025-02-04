@@ -10,3 +10,5 @@ services:
       - ${VOLUME}/data:/data
     ports:
       - "${PORT}:7575"
+    labels:
+      - "traefik.enable=true"
