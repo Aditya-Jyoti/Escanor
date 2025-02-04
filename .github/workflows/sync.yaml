@@ -49,7 +49,7 @@ jobs:
 
                 # Move into the service directory and run docker-compose
                 cd "$dir"
-                pwd
+                echo "$dir"
                 docker-compose up -d
                 cd -
               fi
