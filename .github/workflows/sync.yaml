@@ -33,6 +33,7 @@ jobs:
             # Run docker compose for each service
             for dir in *; do
               echo "Deploying service in directory: $dir"
+              cd $dir
 
               # Get all decrypted environment variables
               SERVICE_ENV=$(yq -r ".${dir} | to_entries | .[] | \"\(.key)=\(.value)\"" ../../.env.yaml)
