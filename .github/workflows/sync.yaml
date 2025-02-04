@@ -25,7 +25,7 @@ jobs:
             git pull origin main 
 
             # Decrypt the .env.encrypted.yaml file using SOPS
-            SOPS_AGE_KEY_FILE=${{ secrets.AGE_KEY }} sops --decrypt .env.encrypted.yaml > .env.yaml
+            sops --decrypt .env.encrypted.yaml > .env.yaml
 
             # Move into services directory 
             cd services 
