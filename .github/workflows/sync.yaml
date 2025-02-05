@@ -39,7 +39,7 @@ jobs:
               SERVICE_ENV=$(yq -r ".${dir} | to_entries | .[] | \"\(.key)=\(.value)\"" ../../.env.yaml)
 
               # Get all decrypted environment variables and export them 
-              echo $SERVICE_ENV 
+              echo $SERVICE_ENV > .env
 
               # Move into the service directory and run docker-compose
               docker compose up -d
