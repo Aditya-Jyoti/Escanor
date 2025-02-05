@@ -50,6 +50,6 @@ services:
       - ${AGENDAV_VOLUME}/log:/app/log:rw
       - ${AGENDAV_VOLUME}/temp:/app/temp:rw
     restart: unless-stopped
-    user: "1000:1000"
+    command: sh -c "chown -R www-data:www-data /var/www/agendav/web && chmod -R 775 /var/www/agendav/web && apache2-foreground"
     labels:
       - "traefik.enable=true"
