@@ -51,5 +51,6 @@ services:
       - ${AGENDAV_VOLUME}/temp:/app/temp
     command: sh -c "chown -R www-data:www-data /app/log && chmod -R 775 /app/log && apache2-foreground"
     restart: unless-stopped
+    user: "1000:1000"
     labels:
       - "traefik.enable=true"
