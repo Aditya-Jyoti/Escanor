@@ -12,8 +12,6 @@ services:
       - AGENDAV_TIMEZONE=Asia/Kolkata
       - AGENDAV_LANG=en
       - AGENDAV_LOG_DIR=/app/log
-    ports:
-      - "${PORT}:8080"
     volumes:
       - ${VOLUME}/data:/app/data
       - ${VOLUME}/log:/app/log

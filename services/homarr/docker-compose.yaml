@@ -8,7 +8,5 @@ services:
       - ${VOLUME}/configs:/app/data/configs
       - ${VOLUME}/icons:/app/public/icons
       - ${VOLUME}/data:/data
-    ports:
-      - "${PORT}:7575"
     labels:
       - "traefik.enable=true"

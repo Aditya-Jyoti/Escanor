@@ -13,8 +13,6 @@ services:
         source: /etc/timezone
         target: /etc/timezone
         read_only: true
-    ports:
-      - ${PORT}:25600
     user: "1000:1000"
     restart: unless-stopped
     labels:
