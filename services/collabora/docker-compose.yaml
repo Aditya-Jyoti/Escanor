@@ -1,0 +1,15 @@
+services:
+  collabora:
+    image: collabora/code
+    container_name: docs
+    restart: unless-stopped
+    volumes:
+      - ${VOLUME}:/etc/coolwsd/:rw
+    environment:
+      - domain=${DOMAIN}
+      - username=${USERNAME}
+      - password=${PASSWORD}
+      - dictionaries=en_US
+      - TZ=Asia/Kolkata
+    labels:
+      - "traefik.enable=true"
