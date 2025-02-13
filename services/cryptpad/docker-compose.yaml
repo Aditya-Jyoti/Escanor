@@ -8,16 +8,17 @@ services:
       - CPAD_MAIN_DOMAIN=${MAIN_DOMAIN}
       - CPAD_SANDBOX_DOMAIN=${SANDBOX_DOMAIN}
       - CPAD_CONF=/cryptpad/config/config.js
+      - CPAD_INSTALL_ONLYOFFICE=yes
 
     volumes:
       - ${VOLUME}/blob:/blob
       - ${VOLUME}/block:/block
       - ${VOLUME}/customize:/customize
-      - ${VOLUME}/config:/config
       - ${VOLUME}/data:/data
       - ${VOLUME}/files:/datastore
       - ${VOLUME}/onlyoffice-dist:/cryptpad/www/common/onlyoffice/dist
       - ${VOLUME}/onlyoffice-conf:/cryptpad/onlyoffice-conf
+      - ${VOLUME}/config.js:/cryptpad/config/config.js
 
     ports:
       - "${MAIN_PORT}:3000"
