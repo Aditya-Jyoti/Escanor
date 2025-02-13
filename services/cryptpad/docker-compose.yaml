@@ -1,0 +1,17 @@
+version: "2.1"
+services:
+  installer:
+    image: nicholaswilde/cryptpad
+    container_name: docs
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kolkata
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ${VOLUME}/blob:/blob
+      - ${VOLUME}/block:/block
+      - ${VOLUME}/customize:/customize
+      - ${VOLUME}/config:/config
+      - ${VOLUME}/data:/data
+      - ${VOLUME}/datastore:/datastore
