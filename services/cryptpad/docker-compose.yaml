@@ -19,10 +19,15 @@ services:
       - ${VOLUME}/onlyoffice-dist:/cryptpad/www/common/onlyoffice/dist
       - ${VOLUME}/onlyoffice-conf:/cryptpad/onlyoffice-conf
 
+    ports:
+      - "${MAIN_PORT}:3000"
+      - "${SUB_PORT}:3003"
+
     ulimits:
       nofile:
         soft: 1000000
         hard: 1000000
-    
+
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.docs.loadbalancer.server.port=${MAIN_PORT}"
