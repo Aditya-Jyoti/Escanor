@@ -1,0 +1,30 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ${VOLUME}/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ${VOLUME}/prometheus:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - ${VOLUME}/grafana:/var/lib/grafana
+      - ${VOLUME}/grafana.ini:/etc/grafana/grafana.ini
+    labels:
+      - "traefik.enable=true"
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - "--path.rootfs=/host"
+      - "--collector.systemd"
+      - "--collector.processes"
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - "/:/host:ro,rslave"
