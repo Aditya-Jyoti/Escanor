@@ -8,5 +8,7 @@ services:
       - ${VOLUME}/filebrowser.db:/database.db
       - ${VOLUME}/filebrowser.json:/.filebrowser.json
     restart: always
+    ports:
+      - ${PORT}:80
     labels:
       - "traefik.enable=true"
