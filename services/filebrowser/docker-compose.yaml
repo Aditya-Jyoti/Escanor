@@ -1,0 +1,12 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: acads
+    user: 1000:1000
+    volumes:
+      - ${DATA}:/srv
+      - ${VOLUME}/filebrowser.db:/database.db
+      - ${VOLUME}/filebrowser.json:/.filebrowser.json
+    restart: always
+    labels:
+      - "traefik.enable=true"
