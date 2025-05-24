@@ -3,7 +3,7 @@ Description=Book Watchdog Script
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /path/to/watch_books.py
+ExecStart=/usr/bin/python3 /home/aditya/Escanor/scripts.py
 Restart=always
 User=your_username
 Environment=PYTHONUNBUFFERED=1

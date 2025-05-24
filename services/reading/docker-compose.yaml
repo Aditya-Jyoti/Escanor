@@ -33,21 +33,17 @@ services:
     labels:
       - "traefik.enable=true"
 
-  tranga-api:
-    image: glax/tranga-api:latest
-    container_name: manga-sourcer
-    volumes:
-      - ${MANGA_VOLUME}:/Manga
-      - ${TRANGA_CONFIG}:/usr/share/tranga-api
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-
-  tranga-website:
-    image: glax/tranga-website:latest
+  suwayomi:
+    image: ghcr.io/suwayomi/suwayomi-server:preview
     container_name: manga
-    depends_on:
-      - tranga-api
-    restart: unless-stopped
+    environment:
+      - TZ=Asia/Calcutta
+      - DOWNLOAD_AS_CBZ=true
+      - EXTENSION_REPOS=["https://raw.githubusercontent.com/ThePBone/tachiyomi-extensions-revived/repo/index.min.json"]
+    user: 1000:1000
+    restart: on-failure:3
+    volumes:
+      - ${SUWAYOMI_CONFIG}:/home/suwayomi/.local/share/Tachidesk
+      - ${MANGA_VOLUME}:/home/suwayomi/.local/share/Tachidesk/downloads/mangas
     labels:
       - "traefik.enable=true"
