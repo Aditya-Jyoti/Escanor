@@ -1,20 +1,4 @@
 services:
-  kavita:
-    image: jvmilazz0/kavita:latest
-    container_name: read
-    volumes:
-      - ${MANGA_VOLUME}:/manga
-      - ${BOOK_VOLUME}:/books
-      - ${KAVITA_CONFIG}:/kavita/config
-    environment:
-      - TZ=Asia/Calcutta
-    depends_on:
-      - calibre-web-book-downloader
-      - suwayomi
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-
   calibre-web-book-downloader:
     image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
     container_name: books
@@ -44,6 +28,5 @@ services:
     restart: on-failure:3
     volumes:
       - ${SUWAYOMI_CONFIG}:/home/suwayomi/.local/share/Tachidesk
-      - ${MANGA_VOLUME}:/home/suwayomi/.local/share/Tachidesk/downloads/mangas
     labels:
       - "traefik.enable=true"
