@@ -10,7 +10,7 @@ services:
       - TZ=Asia/Calcutta
     depends_on:
       - calibre-web-book-downloader
-      - tranga-website
+      - suwayomi
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
