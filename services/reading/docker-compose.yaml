@@ -1,0 +1,51 @@
+services:
+  kavita:
+    image: jvmilazz0/kavita:latest
+    container_name: read
+    volumes:
+      - ${MANGA_VOLUME}:/manga
+      - ${BOOK_VOLUME}:/books
+      - ${KAVITA_CONFIG}:/kavita/config
+    environment:
+      - TZ=Asia/Calcutta
+    depends_on:
+      - calibre-web-book-downloader
+      - tranga-website
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+
+  calibre-web-book-downloader:
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    container_name: books
+    environment:
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: en
+      USE_BOOK_TITLE: true
+      TZ: Asia/Calcutta
+      APP_ENV: prod
+      UID: 1000
+      GID: 100
+    restart: unless-stopped
+    volumes:
+      - ${BOOK_VOLUME}:/cwa-book-ingest
+    labels:
+      - "traefik.enable=true"
+
+  tranga-api:
+    image: glax/tranga-api:latest
+    container_name: manga-sourcer
+    volumes:
+      - ${MANGA_VOLUME}:/Manga
+      - ${TRANGA_CONFIG}:/usr/share/tranga-api
+    restart: unless-stopped
+
+  tranga-website:
+    image: glax/tranga-website:latest
+    container_name: manga
+    depends_on:
+      - tranga-api
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
