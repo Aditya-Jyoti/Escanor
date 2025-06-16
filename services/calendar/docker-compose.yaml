@@ -1,0 +1,52 @@
+services:
+  agendav:
+    container_name: calendar
+    image: ghcr.io/nagimov/agendav-docker:latest
+    environment: 
+      - AGENDAV_SERVER_NAME=${SERVER_NAME}
+      - AGENDAV_TITLE=Calendar
+      - AGENDAV_FOOTER=Hosted for Aditya Jyoti via Escanor
+      - AGENDAV_ENC_KEY=${ENC_KEY}
+      - AGENDAV_CALDAV_SERVER=${CALDAV_SERVER}
+      - AGENDAV_CALDAV_PUBLIC_URL=${PUBLIC_URL}
+      - AGENDAV_TIMEZONE=Asia/Kolkata
+      - AGENDAV_LANG=en
+      - AGENDAV_LOG_DIR=/app/log
+    volumes:
+      - ${VOLUME_AGENDAV}/data:/app/data
+      - ${VOLUME_AGENDAV}/log:/app/log
+      - ${VOLUME_AGENDAV}/temp:/app/temp
+    restart: unless-stopped
+    command: apache2-foreground
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.calendar.loadbalancer.server.port=8080"
+
+  radicale:
+    image: tomsquest/docker-radicale
+    container_name: caldav
+    init: true
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+      - KILL
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          pids: 50
+    healthcheck:
+      test: curl -f http://127.0.0.1:5232 || exit 1
+      interval: 30s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - ${VOLUME_CALDAV}/data:/data
+    labels:
+      - "traefik.enable=true"
