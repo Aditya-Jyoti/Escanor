@@ -2,7 +2,7 @@ services:
   agendav:
     container_name: calendar
     image: ghcr.io/nagimov/agendav-docker:latest
-    environment: 
+    environment:
       - AGENDAV_SERVER_NAME=${SERVER_NAME}
       - AGENDAV_TITLE=Calendar
       - AGENDAV_FOOTER=Hosted for Aditya Jyoti via Escanor
@@ -47,6 +47,6 @@ services:
       retries: 3
     restart: unless-stopped
     volumes:
-      - ${VOLUME_CALDAV}/data:/data
+      - ${VOLUME_RADICAL}/data:/data
     labels:
       - "traefik.enable=true"
