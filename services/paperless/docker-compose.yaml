@@ -15,6 +15,8 @@ services:
       PAPERLESS_DBHOST: db
       PAPERLESS_DBUSER: ${DB_USER}
       PAPERLESS_DBPASS: ${DB_PASSWORD}
+      PAPERLESS_CSRF_TRUSTED_ORIGINS: 'https://paperless.adityajyoti.com'
+      PAPERLESS_USE_X_FORWARDED_HOST: 'true'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.rule=Host(`paperless.adityajyoti.com`)"
