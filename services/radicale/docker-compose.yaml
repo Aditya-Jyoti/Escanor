@@ -1,0 +1,12 @@
+services:
+  radicale:
+    image: grepular/radicale:3
+    ports:
+      - ${PORT:?}:5232
+    volumes:
+      - ${DATA_STORAGE:?}/config:/etc/radicale:ro
+      - ${DATA_STORAGE:?}/data:/var/lib/radicale
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radicale.rule=Host(`${DOMAIN:?}`)
