@@ -1,0 +1,34 @@
+services:
+  syncthing:
+    image: syncthing/syncthing
+    hostname: syncthing
+    container_name: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ${SYNCTHING_DATA:?}:/var/syncthing
+    restart: unless-stopped
+    network_mode: host
+    healthcheck:
+      test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    user: "1000:1000"
+    ports:
+      - ${PORT:?}:80
+    volumes:
+      - ${SYNCTHING_DATA:?}:/srv
+      - ${DATA_STORAGE:?}/config:/config
+      - ${DATA_STORAGE:?}/database:/database
+    environment:
+      - FB_BASEURL=/f
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser.rule=Host(`${DOMAIN:?}`)

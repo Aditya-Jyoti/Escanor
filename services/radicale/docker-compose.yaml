@@ -1,6 +1,7 @@
 services:
   radicale:
     image: grepular/radicale:3
+    container_name: radicale
     ports:
       - ${PORT:?}:5232
     volumes:
