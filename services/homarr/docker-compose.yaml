@@ -1,14 +1,15 @@
 services:
   homarr:
-    container_name: home
+    container_name: dashboard
     image: ghcr.io/homarr-labs/homarr:latest
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${VOLUME}/appdata:/appdata
+      - ${DATA_STORAGE:?}/appdata:/appdata
     ports:
-      - '7575:7575'
+      - ${PORT:?}:7575
     environment:
-      - SECRET_ENCRYPTION_KEY=${SECRET_KEY}
+      - SECRET_ENCRYPTION_KEY=${SECRET_KEY:?}
     labels:
-      - "traefik.enable=true"
+      - traefik.enable=true
+      - traefik.http.routers.homarr.rule=Host(`${DOMAIN:?}`)

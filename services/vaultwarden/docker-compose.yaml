@@ -1,0 +1,14 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: password-manager
+    restart: unless-stopped
+    environment:
+      DOMAIN: https://${DOMAIN:?}
+    ports:
+      - ${PORT:?}:80
+    volumes:
+      - ${DATA_PATH:?}:/data/
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.vaultwarden.rule=Host(`${DOMAIN:?}`)

@@ -1,13 +1,12 @@
 services:
   traefik:
-    container_name: traefik
+    container_name: reverse-proxy
     image: traefik:v3.3
     command:
-      #- "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.defaultRule=Host(`{{ normalize .ContainerName }}.adityajyoti.com`)"
+      - "--providers.docker.defaultRule=Host(`{{ normalize .ContainerName }}.${DOMAIN:?}`)"
       - "--entryPoints.http.address=:80"
       - "--entryPoints.http.http.redirections.entryPoint.to=https"
       - "--entryPoints.http.http.redirections.entryPoint.scheme=https"
@@ -15,13 +14,14 @@ services:
       - "--entryPoints.https.http.tls.certResolver=letsencrypt"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entryPoint=http"
-      - "--certificatesresolvers.letsencrypt.acme.email=${EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.email=${EMAIL:?}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--serversTransport.insecureSkipVerify=true"
     network_mode: host
     volumes:
-      - ${VOLUME}/letsencrypt:/letsencrypt
+      - ${DATA_PATH:?}/letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - traefik.enable=true
       - traefik.http.services.traefik.loadbalancer.server.port=8080
+      - "traefik.http.routers.traefik.rule=Host(`proxy.${DOMAIN:?}`)"
