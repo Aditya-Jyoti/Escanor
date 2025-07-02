@@ -1,20 +1,23 @@
 services:
   syncthing:
     image: syncthing/syncthing
-    hostname: syncthing
     container_name: syncthing
+    ports:
+      - 8384:8384
     environment:
       - PUID=1000
       - PGID=1000
     volumes:
       - ${SYNCTHING_DATA:?}:/var/syncthing
     restart: unless-stopped
-    network_mode: host
     healthcheck:
       test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
       interval: 1m
       timeout: 10s
       retries: 3
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.syncthing.rule=Host(`st.omrin.in`)
 
   filebrowser:
     image: filebrowser/filebrowser:latest
@@ -23,7 +26,7 @@ services:
     ports:
       - ${PORT:?}:80
     volumes:
-      - ${SYNCTHING_DATA:?}:/srv
+      - ${SYNCTHING_DATA:?}/data:/srv
       - ${DATA_STORAGE:?}/config:/config
       - ${DATA_STORAGE:?}/database:/database
     environment:
